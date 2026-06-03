@@ -77,29 +77,23 @@ def chat_with_project(project_id: str, user_id: str, messages: list[dict[str, An
         "Always provide your answer in Markdown format. Be concise and precise."
     )
 
-    prompt_parts: list[str] = []
-    prompt_parts.append(f"System: {system_instruction}\n")
-
+    system_with_context = system_instruction
     if context_block:
-        prompt_parts.append(f"Context (Retrieved Logs):\n{context_block}\n")
+        system_with_context += f"\n\nRelevant alert context:\n{context_block}"
 
-    prompt_parts.append("Conversation history:")
-    for i in range(len(messages) - 1):
-        msg = messages[i]
-        role = str(msg.get("role", "user")).capitalize()
-        content = str(msg.get("content", ""))
-        prompt_parts.append(f"{role}: {content}")
+    api_messages = [{"role": "system", "content": system_with_context}]
+    for msg in messages:
+        role = msg.get("role", "user")
+        content = msg.get("content", "")
+        if role in ("user", "assistant") and content:
+            api_messages.append({"role": role, "content": content})
 
-    prompt_parts.append(f"User Question: {query}")
-    prompt_parts.append("Assistant:")
-
-    full_prompt = "\n".join(prompt_parts)
 
     chat_client = HFChatClient(
         model_name=config.hf_chat_model,
         api_token=config.hf_token,
     )
 
-    response_text = chat_client.generate(full_prompt, max_new_tokens=1024)
+    response_text = chat_client.generate(api_messages, max_new_tokens=1024)
     retrieved_docs = [{"text": doc.get("text", ""), "score": doc.get("score", 0)} for doc in results if doc.get("text")]
     return response_text, retrieved_docs

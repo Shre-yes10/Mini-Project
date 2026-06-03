@@ -57,10 +57,10 @@ class HFChatClient:
             api_key=api_token,
         )
 
-    def generate(self, prompt: str, max_new_tokens: int = 512) -> str:
+    def generate(self, messages: str, max_new_tokens: int = 512) -> str:
         completion = self.client.chat.completions.create(
             model=self.model_name,
-            messages=[{"role": "user", "content": prompt}],
+            messages=messages,
             max_tokens=max_new_tokens,
             temperature=0.3,
             top_p=0.9,
