@@ -1,0 +1,10 @@
+{
+  "$schema": "https://ui.shadcn.com/schema.json",
+  "style": "default",
+  "rsc": false,
+  "registry": "https://shadcnui-registry.vercel.app",
+  "resolvedPaths": {
+    "utils": "src/lib/utils",
+    "components": "src/components"
+  }
+}

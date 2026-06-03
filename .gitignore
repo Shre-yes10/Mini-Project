@@ -1,0 +1,13 @@
+# ── macOS ─────────────────────────────────────────────────
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# ── IDEs ──────────────────────────────────────────────────
+.vscode/
+.idea/
+
+# ── Environment / secrets ──────────────────────────────────
+.env
+.env.*
+!.env.example
