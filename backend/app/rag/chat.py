@@ -61,7 +61,15 @@ def chat_with_project(project_id: str, user_id: str, messages: list[dict[str, An
         }
     ]
 
-    results = list(collection.aggregate(pipeline))
+    # results = list(collection.aggregate(pipeline))
+    results = list(
+    collection.find(
+        {
+            "user_id": user_id,
+            "project_id": project_id
+        }
+    ).limit(3)
+)
     context_lines = [doc.get("text", "") for doc in results if doc.get("text")]
     context_block = "\n".join(context_lines)
     
